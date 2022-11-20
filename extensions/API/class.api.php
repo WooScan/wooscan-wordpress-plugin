@@ -161,8 +161,20 @@ class WooScanAPI extends WooScan
 			array('post_type' => 'product',
 				'post_status' => 'any',
 				'posts_per_page' => 2,
-				'meta_key' => '_wooscan_barcode',
-				'meta_value' => $_GET['barcode'])
+				'meta_query' =>
+				array(
+					'relation' => 'OR',
+					array(  'key' => '_wooscan_barcode',
+					        'value' => $_GET['barcode'],
+							'compare' => '='
+						),
+					array(  'key' => '_%',
+					        'compare_key' => 'LIKE',
+					        'value' => $_GET['barcode'],
+					        'compare' => '='
+					)
+				)
+			)
 		);
 
 		if(!$products || count($products) == 0):
