@@ -160,7 +160,7 @@ class WooScanAPI extends WooScan
 		$products = get_posts(
 			array('post_type' => 'product',
 				'post_status' => 'any',
-				'posts_per_page' => 2,
+				'posts_per_page' => -1,
 				'meta_query' =>
 				array(
 					'relation' => 'OR',
