@@ -48,6 +48,8 @@ class WooScanAPI extends WooScan
 
 	private static function getApiCredentials()
 	{
+		self::checkLicense();
+
 		if(!isset($_GET['action'])):
 			self::logBadRequest('getApiCredentials is a GET request');
 		endif;
@@ -81,7 +83,7 @@ class WooScanAPI extends WooScan
 
 			//CHECK PASSWORD
 			if(wp_check_password($_GET['password'], $user->user_pass, $user->ID)):
-				// TODO : RESET ALL BANS
+				self::resetBan();
 				self::checkAPI($user->ID); // MADE API KEYS IF NOT YET EXIST
 				$return['error'] = false;
 				$return['apiKey'] = get_user_meta($user->ID, 'WooScanApiKey', true);
@@ -118,13 +120,32 @@ class WooScanAPI extends WooScan
 	private static function registerFalseLogin()
 	{
 		// TODO: REGISTER FALSE LOGIN, BAN IF TOO MUCH FALSE LOGINS
+		$falselogins = get_option('false_login_'.$_SERVER['REMOTE_ADDR']);
+		if(!$falselogins): $falselogins = array(); endif;
+		$falselogins[] = time();
+		update_option('false_login_'.$_SERVER['REMOTE_ADDR'], $falselogins);
+	}
+
+	private static function banned()
+	{
+		$falselogins = get_option('false_login_'.$_SERVER['REMOTE_ADDR']);
+		if(count($falselogins) > 15 && time() - end($falselogins) > 900):
+			return true;
+		endif;
+
+		return false;
+	}
+
+	private static function resetBan()
+	{
+		delete_option('false_login_'.$_SERVER['REMOTE_ADDR']);
 	}
 
 	private static function checkApiLogin($key, $secret){
-			global $wpdb, $error;
+		global $wpdb, $error;
 
-		// TODO: CHECK IF NOT BANNED, OTHERWISE DIE
-
+		if(!self::banned()):
+			self::checkLicense();
 			$sql = "SELECT * FROM `".$wpdb->prefix."users` 
 					LEFT JOIN `".$wpdb->prefix."usermeta` as meta
 							ON `".$wpdb->prefix."users`.`ID` = `meta`.`user_id`
@@ -138,13 +159,16 @@ class WooScanAPI extends WooScan
 			$row = $wpdb->get_results($sql);
 
 			if(count($row) == 1):
-				// TODO: RESET BANS BECAUSE LOGIN SUCCEEDED
+				self::resetBan();
 				return end($row)->ID;
 			else:
 				self::logBadRequest('API credentials not correct', true);
 				die();
 			endif;
-		// TODO: LOGIN CHECK ON CREDENTIALS
+		else:
+			self::logBadRequest('Error: Too many bad login attempts. Please wait 60 minutes and try again', true);
+			die();
+		endif;
 	}
 
 	private static function getProductByBarcode()
@@ -159,21 +183,21 @@ class WooScanAPI extends WooScan
 
 		$products = get_posts(
 			array('post_type' => 'product',
-				'post_status' => 'any',
-				'posts_per_page' => -1,
-				'meta_query' =>
-				array(
-					'relation' => 'OR',
-					array(  'key' => '_wooscan_barcode',
-					        'value' => $_GET['barcode'],
-							'compare' => '='
-						),
-					array(  'key' => '_%',
-					        'compare_key' => 'LIKE',
-					        'value' => $_GET['barcode'],
-					        'compare' => '='
-					)
-				)
+			      'post_status' => 'any',
+			      'posts_per_page' => -1,
+			      'meta_query' =>
+				      array(
+					      'relation' => 'OR',
+					      array(  'key' => '_wooscan_barcode',
+					              'value' => $_GET['barcode'],
+					              'compare' => '='
+					      ),
+					      array(  'key' => '_%',
+					              'compare_key' => 'LIKE',
+					              'value' => $_GET['barcode'],
+					              'compare' => '='
+					      )
+				      )
 			)
 		);
 

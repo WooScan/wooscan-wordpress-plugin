@@ -11,9 +11,33 @@ add_action('init', 'WooScanAPI::API');
 
 Class WooScan
 {
-	private static function checkWooLicense()
+	private static function checkLicense()
 	{
-		// TODO: UPDATE SERVER LICENSE EVERY DAY SO APP CAN CHECK IF THIS LICENSE IS STILL ACTIVE ON LOGIN
+		$license = get_option('wooscan_license');
+
+		// NO LICENSE
+		if(!$license):
+			$license = self::getLicense();
+		endif;
+
+		$lastupdate = get_option('wooscan_license_lastupdated');
+		if(time() - $lastupdate > 86400 || time() - $lastupdate < 0):
+			$license = self::getLicense();
+		endif;
+	}
+
+	private static function getLicense()
+	{
+		// create curl resource
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://wooscan.eu/?getLicense&url=".urlencode(get_site_url()));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$output = curl_exec($ch);
+
+		$license = json_decode($output);
+		update_option('wooscan_license', $license);
+		update_option('wooscan_license_lastupdated', time());
+		return $license;
 	}
 
 }
