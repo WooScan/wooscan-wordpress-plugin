@@ -11,7 +11,7 @@ add_action('init', 'WooScanAPI::API');
 
 Class WooScan
 {
-	private static function checkLicense()
+	public static function checkLicense()
 	{
 		$license = get_option('wooscan_license');
 
@@ -26,11 +26,10 @@ Class WooScan
 		endif;
 	}
 
-	private static function getLicense()
+	public static function getLicense()
 	{
-		// create curl resource
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://wooscan.eu/?getLicense&url=".urlencode(get_site_url()));
+		curl_setopt($ch, CURLOPT_URL, "https://www.wooscan.eu/?getLicense&domain=".urlencode(get_site_url()));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$output = curl_exec($ch);
 
