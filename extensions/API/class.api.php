@@ -88,6 +88,7 @@ class WooScanAPI extends WooScan
 				$return['error'] = false;
 				$return['apiKey'] = get_user_meta($user->ID, 'WooScanApiKey', true);
 				$return['apiSecret'] = get_user_meta($user->ID, 'WooScanApiSecret', true);
+				$return['license'] = get_option('wooscan_license')['license'];
 			else:
 				$return['error'] = true;
 				$return['message'] = __('Login credentials incorrect', 'CF');
