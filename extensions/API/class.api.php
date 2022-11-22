@@ -48,60 +48,65 @@ class WooScanAPI extends WooScan
 
 	private static function getApiCredentials()
 	{
-		self::checkLicense();
+		if(!self::banned()):
+			self::checkLicense();
 
-		if(!isset($_GET['action'])):
-			self::logBadRequest('getApiCredentials is a GET request');
-		endif;
-
-		if(isset($_GET['username']) ):
-			self::logBadRequest('username is not used, please use email variable to login');
-		endif;
-
-		if(!isset($_GET['email']) || trim($_GET['email']) == ''):
-			self::logBadRequest('email variable is not set');
-		endif;
-
-		if(!isset($_GET['password']) || trim($_GET['password']) == ''):
-			self::logBadRequest('password variable not set');
-		endif;
-
-		// GET USER
-		global $wpdb;
-		$user = get_user_by('email', $_GET['email']);
-
-		if($user):
-			// IS USER ADMIN?
-			if(!user_can($user, 'manage_woocommerce')):
-				self::logBadRequest('User has insufficient rights to perform woocommerce actions');
+			if(!isset($_GET['action'])):
+				self::logBadRequest('getApiCredentials is a GET request');
 			endif;
 
-			$SQL = 'SELECT * FROM '.$wpdb->prefix.'users WHERE `ID` = '.$user->ID;
-			$user = $wpdb->get_row($SQL);
+			if(isset($_GET['username']) ):
+				self::logBadRequest('username is not used, please use email variable to login');
+			endif;
 
-			$hashedPass = wp_hash_password($_GET['password']);
+			if(!isset($_GET['email']) || trim($_GET['email']) == ''):
+				self::logBadRequest('email variable is not set');
+			endif;
 
-			//CHECK PASSWORD
-			if(wp_check_password($_GET['password'], $user->user_pass, $user->ID)):
-				self::resetBan();
-				self::checkAPI($user->ID); // MADE API KEYS IF NOT YET EXIST
-				$return['error'] = false;
-				$return['apiKey'] = get_user_meta($user->ID, 'WooScanApiKey', true);
-				$return['apiSecret'] = get_user_meta($user->ID, 'WooScanApiSecret', true);
-				$return['license'] = get_option('wooscan_license')['license'];
+			if(!isset($_GET['password']) || trim($_GET['password']) == ''):
+				self::logBadRequest('password variable not set');
+			endif;
+
+			// GET USER
+			global $wpdb;
+			$user = get_user_by('email', $_GET['email']);
+
+			if($user):
+				// IS USER ADMIN?
+				if(!user_can($user, 'manage_woocommerce')):
+					self::logBadRequest('User has insufficient rights to perform woocommerce actions');
+				endif;
+
+				$SQL = 'SELECT * FROM '.$wpdb->prefix.'users WHERE `ID` = '.$user->ID;
+				$user = $wpdb->get_row($SQL);
+
+				$hashedPass = wp_hash_password($_GET['password']);
+
+				//CHECK PASSWORD
+				if(wp_check_password($_GET['password'], $user->user_pass, $user->ID)):
+					self::resetBan();
+					self::checkAPI($user->ID); // MADE API KEYS IF NOT YET EXIST
+					$return['error'] = false;
+					$return['apiKey'] = get_user_meta($user->ID, 'WooScanApiKey', true);
+					$return['apiSecret'] = get_user_meta($user->ID, 'WooScanApiSecret', true);
+					$return['license'] = get_option('wooscan_license')->license;
+				else:
+					$return['error'] = true;
+					$return['message'] = __('Login credentials incorrect', 'CF');
+					self::logBadRequest('Login credentials incorrect');
+				endif;
 			else:
 				$return['error'] = true;
 				$return['message'] = __('Login credentials incorrect', 'CF');
-				self::logBadRequest('Login credentials incorrect');
+
+				self::logBadRequest('Login credentials incorrect', true);
 			endif;
+
+			echo json_encode($return);
 		else:
-			$return['error'] = true;
-			$return['message'] = __('Login credentials incorrect', 'CF');
-
-			self::logBadRequest('Login credentials incorrect');
+			self::logBadRequest('Error: Too many bad login attempts. Please wait 60 minutes and try again', true);
+			die();
 		endif;
-
-		echo json_encode($return);
 		die();
 	}
 
@@ -129,8 +134,9 @@ class WooScanAPI extends WooScan
 
 	private static function banned()
 	{
+
 		$falselogins = get_option('false_login_'.$_SERVER['REMOTE_ADDR']);
-		if(count($falselogins) > 15 && time() - end($falselogins) > 900):
+		if($falselogins && count($falselogins) > 15 && (time() - end($falselogins) < 900)):
 			return true;
 		endif;
 
