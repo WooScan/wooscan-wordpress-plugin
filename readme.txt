@@ -1,0 +1,40 @@
+=== WooScan ===
+Contributors: jerrytieben
+Tags: WooScan, WooCommerce Barcode Scanner, Barcode Scanner, barcodes, WooCommerce Stock
+Requires at least: 4.7
+Tested up to: 6.1.1
+Stable tag: 4.7
+Requires PHP: 7.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Easily scan barcodes of your products and update your stock in WooCommerce
+
+== Description ==
+
+Update incoming stock in your WooCommerce webshop by scanning barcodes
+
+Step 1: Scan the barcode
+Step 2a: Barcode found? Update how much you have in stock of this product
+Step 2b: Barcode not found? Search for the corresponding product and connect the scanned barcode
+
+That's it!
+It will save you a ton of time and it even works with variable products
+
+
+== Frequently Asked Questions ==
+
+= Do i need a barcode scanner device? =
+
+Nope. You can use our iOS and Android apps to scan your products
+
+
+== Screenshots ==
+
+1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Screenshots are stored in the /assets directory.
+2. This is the second screen shot
+
+== Changelog ==
+
+= 1.0 =
+* Various bug fixes + first launch
