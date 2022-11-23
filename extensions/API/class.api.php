@@ -189,9 +189,9 @@ class WooScanAPI extends WooScan
 			self::logBadRequest('Barcode variable not set');
 		endif;
 
-		$sql = "SELECT * FROM '.$wpdb->prefix.'posts as posts
-				WHERE `posts`.`post_type` IN ('product', 'product_variation')
-				AND EXISTS (SELECT * FROM '.$wpdb->prefix.'postmeta as meta 
+		$sql = "SELECT * FROM ".$wpdb->prefix."posts as posts
+				WHERE (`posts`.`post_type` = 'product' OR `posts`.`post_type` = 'product_variation')
+				AND EXISTS (SELECT * FROM ".$wpdb->prefix."postmeta as meta 
 						WHERE `meta`.`post_id` = `posts`.`ID` 
 						 AND `meta`.`meta_key` LIKE '_%' AND `meta`.`meta_value` = '".trim($_GET['barcode'])."' )";
 		$products = $wpdb->get_results($sql);
