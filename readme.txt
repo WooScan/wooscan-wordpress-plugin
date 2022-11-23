@@ -37,6 +37,9 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
+= 1.0.1 =
+* Various bug fixes
+
 = 1.0 =
 * Various bug fixes + first launch
 
