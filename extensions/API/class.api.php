@@ -180,6 +180,7 @@ class WooScanAPI extends WooScan
 
 	private static function getProductByBarcode()
 	{
+		global $wpdb;
 		if(!isset($_GET['action'])):
 			self::logBadRequest('getProductByBarcode is a GET request');
 		endif;
@@ -188,31 +189,37 @@ class WooScanAPI extends WooScan
 			self::logBadRequest('Barcode variable not set');
 		endif;
 
-		$products = get_posts(
-			array('post_type' => 'product',
-			      'post_status' => 'any',
-			      'posts_per_page' => -1,
-			      'meta_query' =>
-				      array(
-					      'relation' => 'OR',
-					      array(  'key' => '_wooscan_barcode',
-					              'value' => $_GET['barcode'],
-					              'compare' => '='
-					      ),
-					      array(  'key' => '_%',
-					              'compare_key' => 'LIKE',
-					              'value' => $_GET['barcode'],
-					              'compare' => '='
-					      )
-				      )
-			)
-		);
+		$sql = "SELECT * FROM '.$wpdb->prefix.'posts as posts
+				WHERE `posts`.`post_type` IN ('product', 'product_variation')
+				AND EXISTS (SELECT * FROM '.$wpdb->prefix.'meta as meta 
+						WHERE `meta`.`post_id` = `posts`.`ID` 
+						 AND `meta`.`meta_key` LIKE '_%' AND `meta`.`meta_value` = '".trim($_GET['barcode'])."' )";
+		$products = $wpdb->get_results($sql);
+
+//		$products = get_posts(
+//			array('post_type' => array('product', 'product_variation'),
+//			      'post_status' => 'any',
+//			      'posts_per_page' => -1,
+//			      'meta_query' =>
+//				      array(
+//					      'relation' => 'OR',
+//					      array(  'key' => '_wooscan_barcode',
+//					              'value' => $_GET['barcode'],
+//					              'compare' => '='
+//					      ),
+//					      array(  'key' => '_%',
+//					              'compare_key' => 'LIKE',
+//					              'value' => $_GET['barcode'],
+//					              'compare' => '='
+//					      )
+//				      )
+//			)
+//		);
 
 		if(!$products || count($products) == 0):
 			echo json_encode(array());
 			return;
 		endif;
-
 
 		$returnProducts = array();
 		foreach($products as $product):
@@ -233,7 +240,7 @@ class WooScanAPI extends WooScan
 		endif;
 
 		$products = get_posts(
-			array('post_type' => 'product',
+			array('post_type' => array('product', 'product_variation'),
 			      'post_status' => 'any',
 			      's' => $_GET['searchterm'],
 			      'posts_per_page' => 99)
