@@ -10,7 +10,7 @@ require 'plugin-update-checker-master/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $updateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/WooScan/wooscan-wordpress-plugin.git',
+    'https://github.com/WooScan/wooscan-wordpress-plugin',
     __FILE__,
     'wooscan'
 );
