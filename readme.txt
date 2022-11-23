@@ -1,5 +1,6 @@
 === WooScan ===
 Contributors: jerrytieben
+Donate link: https://www.wooscan.eu
 Tags: WooScan, WooCommerce Barcode Scanner, Barcode Scanner, barcodes, WooCommerce Stock
 Requires at least: 4.7
 Tested up to: 6.1.1
@@ -38,3 +39,8 @@ Nope. You can use our iOS and Android apps to scan your products
 
 = 1.0 =
 * Various bug fixes + first launch
+
+== Upgrade Notice ==
+
+= 1.0 =
+We fixed a few bugs for you :-)
