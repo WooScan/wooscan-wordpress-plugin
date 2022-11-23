@@ -19,6 +19,9 @@ $updateChecker = PucFactory::buildUpdateChecker(
 $updateChecker->setBranch('main');
 //$updateChecker->setAuthentication('your-token-here');
 
+$plugin_data = get_plugin_data( __FILE__ );
+$plugin_version = $plugin_data['Version'];
+
 include_once("extensions/API/class.api.php");
 add_action('init', 'WooScanAPI::API');
 
@@ -42,7 +45,7 @@ Class WooScan
 	public static function getLicense()
 	{
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://www.wooscan.eu/?getLicense&domain=".urlencode(get_site_url()));
+		curl_setopt($ch, CURLOPT_URL, "https://www.wooscan.eu/?getLicense".urlencode($plugin_version)."&domain=".urlencode(get_site_url())&Version);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$output = curl_exec($ch);
 
