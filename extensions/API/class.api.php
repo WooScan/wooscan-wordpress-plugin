@@ -273,12 +273,13 @@ class WooScanAPI extends WooScan
 		endif;
 
 		$product = get_post($productid);
+		$thumb = get_the_post_thumbnail_url($product, 'medium');
 
 		$newproduct = array(
 			'ID' => $product->ID,
 			'title' => $product->post_title,
 			'description' => $product->post_content,
-			'image' => get_the_post_thumbnail_url($product, 'medium'),
+			'image' => ($thumb ? $thumb : wc_placeholder_img_src('small')),
 			'barcode' => get_post_meta($product->ID, '_wooscan_barcode', true)
 		);
 

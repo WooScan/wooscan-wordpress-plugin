@@ -37,6 +37,9 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
+= 1.0.4 =
+* Bug fix on search when product has nog image
+
 = 1.0.3 =
 * Searching by searchterm fix
 
