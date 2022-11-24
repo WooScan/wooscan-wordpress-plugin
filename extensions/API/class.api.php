@@ -289,7 +289,7 @@ class WooScanAPI extends WooScan
 		$newproduct['meta']['stock_status'] = $productdetails->get_stock_status();
 		$newproduct['meta']['stock_quantity'] = $productdetails->get_stock_quantity();
 		$newproduct['meta']['sku'] = $productdetails->get_sku();
-		$newproduct['meta']['price'] = $productdetails->get_price();
+		$newproduct['meta']['price'] = doubleval($productdetails->get_price());
 		$newproduct['meta']['currency'] = get_woocommerce_currency_symbol();
 		$newproduct['meta']['sale'] = $productdetails->get_sale_price() !== '' ? $productdetails->get_sale_price() : $productdetails->get_price();
 		$attributes = $productdetails->get_attributes();

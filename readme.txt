@@ -37,6 +37,9 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
+= 1.0.5 =
+* Bug fix: No price on variation product gave blank screen
+
 = 1.0.4 =
 * Bug fix on search when product has nog image
 
