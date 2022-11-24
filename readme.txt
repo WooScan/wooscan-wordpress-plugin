@@ -37,6 +37,9 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
+= 1.0.7 =
+* License Bug fix
+
 = 1.0.6 =
 * Bug fix: No price on variation product gave blank screen
 
