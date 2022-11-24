@@ -291,7 +291,7 @@ class WooScanAPI extends WooScan
 		$newproduct['meta']['sku'] = $productdetails->get_sku();
 		$newproduct['meta']['price'] = number_format($productdetails->get_price(), 2);
 		$newproduct['meta']['currency'] = get_woocommerce_currency_symbol();
-		$newproduct['meta']['sale'] = intval($productdetails->get_sale_price()) > 0 ? number_format($productdetails->get_sale_price(),2) : number_format$productdetails->get_price(),2);
+		$newproduct['meta']['sale'] = intval($productdetails->get_sale_price()) > 0 ? number_format($productdetails->get_sale_price(),2) : number_format($productdetails->get_price(),2);
 		$attributes = $productdetails->get_attributes();
 		if($attributes && is_array($attributes)):
 			foreach($attributes as $key => $value):
