@@ -231,6 +231,8 @@ class WooScanAPI extends WooScan
 
 	private static function searchProducts()
 	{
+		global $wpdb;
+
 		if(!isset($_GET['action'])):
 			self::logBadRequest('getProductByBarcode is a GET request');
 		endif;
@@ -239,12 +241,17 @@ class WooScanAPI extends WooScan
 			self::logBadRequest('searchterm variable not set');
 		endif;
 
-		$products = get_posts(
-			array('post_type' => array('product', 'product_variation'),
-			      'post_status' => 'any',
-			      's' => $_GET['searchterm'],
-			      'posts_per_page' => 99)
-		);
+		$sql = "SELECT * FROM ".$wpdb->prefix."posts as posts
+				WHERE (`posts`.`post_type` = 'product' OR `posts`.`post_type` = 'product_variation')
+				AND `posts`.`post_title` LIKE '%".trim($_GET['searchterm'])."%'";
+		$products = $wpdb->get_results($sql);
+
+//		$products = get_posts(
+//			array('post_type' => array('product', 'product_variation'),
+//			      'post_status' => 'any',
+//			      's' => $_GET['searchterm'],
+//			      'posts_per_page' => 99)
+//		);
 
 		if(!$products || count($products) == 0):
 			echo json_encode(array());

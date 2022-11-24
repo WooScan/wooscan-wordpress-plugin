@@ -37,6 +37,9 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
+= 1.0.3 =
+* Searching by searchterm fix
+
 = 1.0.2 =
 * Searching by barcode bug fix
 
