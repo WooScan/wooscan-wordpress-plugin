@@ -159,11 +159,13 @@ class WooScanAPI extends WooScan
 					LEFT JOIN `".$wpdb->prefix."usermeta` as meta2
 							ON `".$wpdb->prefix."users`.`ID` = `meta2`.`user_id`
 				WHERE `meta`.`meta_key` = 'WooScanApiKey'
-					AND `meta`.`meta_value` = '".$key."'
+					AND `meta`.`meta_value` = %s
 					AND `meta2`.`meta_key` = 'WooScanApiSecret'
-					AND `meta2`.`meta_value` = '".$secret."'";
+					AND `meta2`.`meta_value` = %s";
 
-			$row = $wpdb->get_results($sql);
+            $sql_prepared = $wpdb->prepare($sql, array($key, $secret));
+
+			$row = $wpdb->get_results($sql_prepared);
 
 			if(count($row) == 1):
 				self::resetBan();
@@ -193,8 +195,9 @@ class WooScanAPI extends WooScan
 				WHERE (`posts`.`post_type` = 'product' OR `posts`.`post_type` = 'product_variation')
 				AND EXISTS (SELECT * FROM ".$wpdb->prefix."postmeta as meta 
 						WHERE `meta`.`post_id` = `posts`.`ID` 
-						 AND `meta`.`meta_key` LIKE '_%' AND `meta`.`meta_value` = '".trim($_GET['barcode'])."' )";
-		$products = $wpdb->get_results($sql);
+						 AND `meta`.`meta_key` LIKE '_%' AND `meta`.`meta_value` = %s )";
+        $sql_prepared = $wpdb->prepare($sql, array(trim($_GET['barcode'])));
+		$products = $wpdb->get_results($sql_prepared);
 
 //		$products = get_posts(
 //			array('post_type' => array('product', 'product_variation'),
@@ -243,8 +246,9 @@ class WooScanAPI extends WooScan
 
 		$sql = "SELECT * FROM ".$wpdb->prefix."posts as posts
 				WHERE (`posts`.`post_type` = 'product' OR `posts`.`post_type` = 'product_variation')
-				AND `posts`.`post_title` LIKE '%".trim($_GET['searchterm'])."%'";
-		$products = $wpdb->get_results($sql);
+				AND `posts`.`post_title` LIKE %s";
+        $sql_prepared = $wpdb->prepare($sql, array('%'.trim($_GET['searchterm']).'%'));
+		$products = $wpdb->get_results($sql_prepared);
 
 //		$products = get_posts(
 //			array('post_type' => array('product', 'product_variation'),
