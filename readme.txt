@@ -37,6 +37,9 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
+= 1.0.8 =
+* SQL injection fix
+
 = 1.0.7 =
 * License Bug fix
 
