@@ -37,6 +37,9 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
+= 1.0.11 =
+* On Activate function added
+
 = 1.0.10 =
 * Price empty fix
 
