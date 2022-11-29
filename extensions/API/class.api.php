@@ -288,14 +288,18 @@ class WooScanAPI extends WooScan
 		);
 
 		$productdetails = wc_get_product( $product->ID );
+        $price = $productdetails->get_price();
+        $sale = $productdetails->get_sale_price();
+        if($price == '' || !$price): $price = 0; endif;
+        if($sale == '' || !$sale): $sale = $price; endif;
 
 		$newproduct['meta']['stock_management_status'] = $productdetails->get_manage_stock();
 		$newproduct['meta']['stock_status'] = $productdetails->get_stock_status();
 		$newproduct['meta']['stock_quantity'] = $productdetails->get_stock_quantity();
 		$newproduct['meta']['sku'] = $productdetails->get_sku();
-		$newproduct['meta']['price'] = number_format(intval($productdetails->get_price()), 2);
+		$newproduct['meta']['price'] = number_format($price, 2);
 		$newproduct['meta']['currency'] = get_woocommerce_currency_symbol();
-		$newproduct['meta']['sale'] = intval($productdetails->get_sale_price()) > 0 ? number_format(intval($productdetails->get_sale_price()),2) : number_format(intval($productdetails->get_price()),2);
+        $newproduct['meta']['sale'] = intval($sale) > 0 ? number_format($sale,2) : number_format($price,2);
 		$attributes = $productdetails->get_attributes();
 		if($attributes && is_array($attributes)):
 			foreach($attributes as $key => $value):

@@ -2,7 +2,7 @@
 
 // Plugin Name: WooScan
 // Author: Jerry Tieben
-// Version: 1.0.8
+// Version: 1.0.9
 // Description: Scan your WooCommerce Product Barcodes
 
 //CHECK FOR UPDATES
@@ -43,10 +43,12 @@ Class WooScan
 	{
 	    global $plugin_version;
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://www.wooscan.eu/?getLicense&user=".urlencode(get_bloginfo('admin_email'))."&domain=".urlencode(get_site_url()));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$output = curl_exec($ch);
+//		$ch = curl_init();
+//		curl_setopt($ch, CURLOPT_URL, "https://www.wooscan.eu/?getLicense&user=".urlencode(get_bloginfo('admin_email'))."&domain=".urlencode(get_site_url()));
+//		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//		$output = curl_exec($ch);
+
+        $output = wp_remote_get( "https://www.wooscan.eu/?getLicense&user=".urlencode(get_bloginfo('admin_email'))."&domain=".urlencode(get_site_url()) );
 
 		$license = json_decode($output);
 		update_option('wooscan_license', $license);

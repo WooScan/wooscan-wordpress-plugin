@@ -37,6 +37,10 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
+= 1.0.9 =
+* Price empty fix
+* bug fixes
+
 = 1.0.8 =
 * SQL injection fix
 
