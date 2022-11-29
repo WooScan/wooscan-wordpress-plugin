@@ -37,8 +37,10 @@ Nope. You can use our iOS and Android apps to scan your products
 
 == Changelog ==
 
-= 1.0.9 =
+= 1.0.10 =
 * Price empty fix
+
+= 1.0.9
 * bug fixes
 
 = 1.0.8 =
