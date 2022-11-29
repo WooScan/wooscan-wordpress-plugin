@@ -2,7 +2,7 @@
 
 // Plugin Name: WooScan
 // Author: Jerry Tieben
-// Version: 1.0.9
+// Version: 1.0.10
 // Description: Scan your WooCommerce Product Barcodes
 
 //CHECK FOR UPDATES
