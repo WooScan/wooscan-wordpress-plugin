@@ -50,7 +50,7 @@ Class WooScan
 
         $output = wp_remote_get( "https://www.wooscan.eu/?getLicense&user=".urlencode(get_bloginfo('admin_email'))."&domain=".urlencode(get_site_url()) );
 
-		$license = json_decode($output);
+		$license = json_decode($output['body']);
 		update_option('wooscan_license', $license);
 		update_option('wooscan_license_lastupdated', time());
 		return $license;
