@@ -227,8 +227,8 @@ class WooScanAPI extends WooScan
 		$returnProducts = array();
 
 		//PLUS STOCK 1 UP IF ONE PRODUCT FOUND AND FUNCTION ON
-		if(count($returnProducts) == 1 && $plusone):
-			$productdetails = wc_get_product( end($returnProducts)->ID );
+		if(count($products) == 1 && $plusone):
+			$productdetails = wc_get_product( end($products)->ID );
 			if($productdetails):
 				$productdetails->set_manage_stock(true);
 				$quantity = $productdetails->get_stock_quantity();
