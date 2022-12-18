@@ -180,7 +180,7 @@ class WooScanAPI extends WooScan
 		endif;
 	}
 
-	private static function getProductByBarcode()
+	private static function getProductByBarcode($plusone = false)
 	{
 		global $wpdb;
 		if(!isset($_GET['action'])):
@@ -225,11 +225,28 @@ class WooScanAPI extends WooScan
 		endif;
 
 		$returnProducts = array();
+
+		//PLUS STOCK 1 UP IF ONE PRODUCT FOUND AND FUNCTION ON
+		if(count($products) == 1 && $plusone):
+			$productdetails = wc_get_product( end($products)->ID );
+			if($productdetails):
+				$productdetails->set_manage_stock(true);
+				$quantity = $productdetails->get_stock_quantity();
+				$productdetails->set_stock_quantity(($quantity+1));
+				$productdetails->save();
+			endif;
+		endif;
+
 		foreach($products as $product):
 			$returnProducts[] = self::getProductDetails($product->ID);
 		endforeach;
 
 		echo json_encode($returnProducts);
+	}
+
+	private static function updateProductPlusOne()
+	{
+		self::getProductByBarcode(true);
 	}
 
 	private static function searchProducts()
