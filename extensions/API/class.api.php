@@ -73,7 +73,7 @@ class WooScanAPI extends WooScan
 
 			if($user):
 				// IS USER ADMIN?
-				if(!user_can($user, 'manage_woocommerce')):
+				if(!current_user_can('shop_manager')):
 					self::logBadRequest('User has insufficient rights to perform woocommerce actions');
 				endif;
 

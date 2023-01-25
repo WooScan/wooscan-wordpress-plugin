@@ -36,6 +36,8 @@ Nope. You can use our iOS and Android apps to scan your products
 2. This is the second screen shot
 
 == Changelog ==
+= 1.0.13 =
+* Bug fixed: Not only admins, but alle woocommerce store managers can use this app now
 
 = 1.0.12 =
 * New +1 function added
