@@ -2,7 +2,7 @@
 
 // Plugin Name: WeScan
 // Author: Jerry Tieben
-// Version: 1.0.13
+// Version: 1.0.14
 // Description: Scan your WooCommerce Product Barcodes
 
 //CHECK FOR UPDATES
